@@ -137,7 +137,7 @@ int main(int argc, char **argv)
             unsigned int page_number = address / pgsize;
             handle(page_number);
             //printf("address: %d, offset: %d,page_number %d\n", address,offset_number, page_number);
-            if((address%pgsize +offset_number)>pgsize){
+            if((address%pgsize +offset_number)>=pgsize){
                 //printf("address: %d, address+offset: %d, offset: %d,page_number %d\n", address,address+offset_number,offset_number, page_number);
                 handle(page_number+1);
             }
