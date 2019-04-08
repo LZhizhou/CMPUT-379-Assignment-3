@@ -1,3 +1,5 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include <malloc/malloc.h>
 #include "node.h"
 
@@ -18,35 +20,37 @@ address_node create_node()
 
 int search_node(address_node start, int value, int mode)
 {
-    address_node previous = NULL;
-    address_node current = start;
-    address_node next = start->next;
+    address_node previous = start;
+    address_node current = start->next;
+    if (current==NULL) {
+        return 0;
+    }
+    
+    address_node next = current->next;
     while (current->address != value)
     {
-        previous = current;
-        current = start;
-        next = current->next;
         if (next == NULL)
         {
             return 0;
         }
+        previous = current;
+        current = next;
+        next = current->next;
     }
     switch (mode)
     {
     case LRU:
-        if (previous == NULL)
+        previous->next = next;
+        address_node temp = current;
+        while (next != NULL)
         {
-            start->address = next->address;
-            start->next = next->next;
-            free(next);
-            append_node(start, value);
+            previous = current;
+            current = next;
+            next = current->next;
         }
-        else
-        {
-            previous->next = next;
-            free(current);
-            append_node(next, value);
-        }
+        temp->next = NULL;
+        current->next = temp;
+
     case FIFO:
         return 1;
     }
@@ -65,10 +69,36 @@ void append_node(address_node start, int value)
     last->next = NULL;
     i->next = last;
 }
-address_node remove_first(address_node start, int value)
+void remove_first(address_node start)
 {
-    append_node(start, value);
-    address_node res = start->next;
+    address_node current = start->next;
+    address_node next = current->next;
+    start->next = next;
+    free(current);
+}
+
+void print_all(address_node start)
+{
+    address_node i = start;
+    while (i->next != NULL)
+    {
+        printf("value: %d\n", i->address);
+        i = i->next;
+    }
+}
+void clear(address_node start){
+
+
+    destroy(start->next);
+    start->next = NULL;
+    
+}
+void destroy(address_node start){
+
+
+    if (start->next!=NULL) {
+        destroy(start->next);
+    }
     free(start);
-    return res;
+    
 }
