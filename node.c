@@ -40,7 +40,14 @@ int search_node(address_node start, int value, int mode)
     switch (mode)
     {
     case LRU:
+        if (next==NULL){
+            return 1 ;
+        }
+        //printf("%d: ", value);
+        //print_all(start);
+
         previous->next = next;
+
         address_node temp = current;
         while (next != NULL)
         {
@@ -50,6 +57,8 @@ int search_node(address_node start, int value, int mode)
         }
         temp->next = NULL;
         current->next = temp;
+        //printf("after: ");
+        //print_all(start);
 
     case FIFO:
         return 1;
@@ -80,11 +89,12 @@ void remove_first(address_node start)
 void print_all(address_node start)
 {
     address_node i = start;
-    while (i->next != NULL)
+    while (i != NULL)
     {
-        printf("value: %d\n", i->address);
+        printf("value: %d,\n", i->address);
         i = i->next;
     }
+    printf("end print\n");
 }
 void clear(address_node start){
 

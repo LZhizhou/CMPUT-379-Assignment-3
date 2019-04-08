@@ -1,6 +1,3 @@
-
-
-
 #define FIFO 1
 #define LRU 2
 
