@@ -110,10 +110,6 @@ void handle(int page_number)
         ref_count = 0;
         tlb_count = 0;
     }
-
-    //print_all(tlb);
-    //sleep(3);
-    //printf("%d\n", page_number);
 }
 
 int main(int argc, char **argv)
@@ -135,12 +131,16 @@ int main(int argc, char **argv)
             unsigned int address = (int)strtol(content, NULL, 16);
             unsigned int offset_number = atoi(offset);
             unsigned int page_number = address / pgsize;
+            unsigned int page_number_offset = (address+offset_number)/pgsize;
             handle(page_number);
-            //printf("address: %d, offset: %d,page_number %d\n", address,offset_number, page_number);
-            if((address%pgsize +offset_number)>=pgsize){
-                //printf("address: %d, address+offset: %d, offset: %d,page_number %d\n", address,address+offset_number,offset_number, page_number);
+            if (page_number!=page_number_offset){
                 handle(page_number+1);
             }
+            //printf("address: %d, offset: %d,page_number %d\n", address,offset_number, page_number);
+/*             if((address%pgsize +offset_number)>=pgsize){
+                //printf("address: %d, address+offset: %d, offset: %d,page_number %d\n", address,address+offset_number,offset_number, page_number);
+                handle(page_number+1);
+            } */
         }
         else
         {
