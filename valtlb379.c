@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <time.h>
+#include <math.h>
 #include "node.h"
 
 int flag_i = 0;
@@ -116,11 +117,13 @@ int main(int argc, char **argv)
 {
 
     read_argv(argc, argv);
-    char instruction;
+    
     tlb = create_node();
+    char instruction;
     while (1)
     {
-        scanf(" %s", &instruction);
+        
+        instruction = getchar();
         if ((!flag_i && instruction == 'I') || instruction == 'S' || instruction == 'L' || instruction == 'M')
         {
             char content[20], offset[3];
@@ -132,15 +135,29 @@ int main(int argc, char **argv)
             unsigned int offset_number = atoi(offset);
             unsigned int page_number = address / pgsize;
             unsigned int page_number_offset = (address+offset_number)/pgsize;
+            //printf("address: %s, offset: %s\n", content, offset);
             handle(page_number);
             if (page_number!=page_number_offset){
+                //printf("extra address: %s, offset: %s\n", content, offset);
                 handle(page_number+1);
             }
+            next_line();
+            
             //printf("address: %d, offset: %d,page_number %d\n", address,offset_number, page_number);
 /*             if((address%pgsize +offset_number)>=pgsize){
                 //printf("address: %d, address+offset: %d, offset: %d,page_number %d\n", address,address+offset_number,offset_number, page_number);
                 handle(page_number+1);
             } */
+        }
+        else if (instruction==' '){
+            continue;
+        }
+        else if (instruction==EOF){
+            
+            printf("%d memory references handled\n%d TLB misses\n%d TLB hits\n", total_ref, total_miss, total_hit);
+        destroy(tlb);
+        exit(0);
+
         }
         else
         {
